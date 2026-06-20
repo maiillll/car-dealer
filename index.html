@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Harga Mobil Bekas</title>
+    <!-- Import Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Import GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Background gradient yang elegan */
+            background: linear-gradient(45deg, #1e3c72, #2a5298, #6dd5ed);
+            background-size: 200% 200%;
+            animation: gradientBG 10s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #fff;
+        }
+
+        /* Styling option agar teks terbaca saat dropdown dibuka */
+        option {
+            background-color: #2a5298;
+            color: white;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #fff;
+            color: #1e3c72;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .result-container {
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .result-price {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-card" id="appCard">
+        <h2>Estimasi Harga Mobil</h2>
+        
+        <div class="input-group">
+            <label for="hargaBaru">Harga Beli Baru (Rp)</label>
+            <input type="number" id="hargaBaru" placeholder="Contoh: 250000000" required>
+        </div>
+
+        <div class="input-group">
+            <label for="tahunMobil">Tahun Pembuatan Mobil</label>
+            <input type="number" id="tahunMobil" placeholder="Contoh: 2018" required>
+        </div>
+
+        <div class="input-group">
+            <label for="kondisi">Kondisi Kendaraan</label>
+            <select id="kondisi">
+                <option value="0">Sangat Baik (Terawat, No PR)</option>
+                <option value="0.05">Baik (Lecet pemakaian wajar)</option>
+                <option value="0.15">Cukup (Ada PR ringan di bodi/kaki-kaki)</option>
+                <option value="0.25">Buruk (Perlu turun mesin / perbaikan besar)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="kilometer">Jarak Tempuh (Kilometer)</label>
+            <input type="number" id="kilometer" placeholder="Contoh: 85000" required>
+        </div>
+
+        <button onclick="hitungEstimasi()">Hitung Harga</button>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-title">Estimasi Harga Jual/Beli Saat Ini:</div>
+            <div class="result-price" id="hasilHarga">Rp 0</div>
+        </div>
+    </div>
+
+    <script>
+        // Animasi masuk awal menggunakan GSAP
+        gsap.from("#appCard", { duration: 1, y: 50, opacity: 0, ease: "power3.out" });
+
+        function hitungEstimasi() {
+            // 1. Ambil nilai input
+            const hargaBaru = parseFloat(document.getElementById('hargaBaru').value);
+            const tahunMobil = parseInt(document.getElementById('tahunMobil').value);
+            const faktorKondisi = parseFloat(document.getElementById('kondisi').value);
+            const kilometer = parseInt(document.getElementById('kilometer').value);
+
+            // Validasi Input
+            if(isNaN(hargaBaru) || isNaN(tahunMobil) || isNaN(kilometer)) {
+                alert("Harap isi semua kolom dengan angka yang valid!");
+                return;
+            }
+
+            // Variabel dasar
+            const tahunSekarang = new Date().getFullYear();
+            let usiaMobil = tahunSekarang - tahunMobil;
+            if(usiaMobil < 0) usiaMobil = 0; // Mencegah input tahun dari masa depan
+
+            let hargaEstimasi = hargaBaru;
+
+            // 2. Hitung Depresiasi Usia
+            if (usiaMobil >= 1) {
+                // Potong 20% di tahun pertama
+                hargaEstimasi = hargaEstimasi - (hargaEstimasi * 0.20);
+                
+                // Potong 10% setiap tahun berikutnya
+                for (let i = 2; i <= usiaMobil; i++) {
+                    hargaEstimasi = hargaEstimasi - (hargaEstimasi * 0.10);
+                }
+            }
+
+            // 3. Hitung Potongan Kondisi
+            hargaEstimasi = hargaEstimasi - (hargaEstimasi * faktorKondisi);
+
+            // 4. Hitung Penalti Kilometer (Asumsi wajar 15.000 km per tahun)
+            const batasKmNormal = usiaMobil === 0 ? 15000 : usiaMobil * 15000;
+            if (kilometer > batasKmNormal) {
+                const kmBerlebih = kilometer - batasKmNormal;
+                // Potong 2% untuk setiap 10.000 km yang berlebih
+                const faktorPenaltiKm = Math.floor(kmBerlebih / 10000) * 0.02;
+                hargaEstimasi = hargaEstimasi - (hargaEstimasi * faktorPenaltiKm);
+            }
+
+            // Pastikan harga tidak minus
+            if(hargaEstimasi < 0) hargaEstimasi = 0;
+
+            // 5. Tampilkan Hasil
+            const resultContainer = document.getElementById('resultContainer');
+            const hasilHarga = document.getElementById('hasilHarga');
+            
+            resultContainer.style.display = 'block';
+            
+            // Format Rupiah
+            const formatRupiah = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(hargaEstimasi);
+
+            hasilHarga.innerHTML = formatRupiah;
+
+            // Animasi GSAP untuk harga
+            gsap.fromTo("#resultContainer", 
+                { scale: 0.8, opacity: 0 }, 
+                { duration: 0.5, scale: 1, opacity: 1, ease: "back.out(1.7)" }
+            );
+        }
+    </script>
+</body>
+  </html>
