@@ -3,241 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Harga Mobil Bekas</title>
-    <!-- Import Font -->
+    <title>Kalkulator Harga Mobil - Auto Dealer System</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Import GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            /* Background gradient yang elegan */
-            background: linear-gradient(45deg, #1e3c72, #2a5298, #6dd5ed);
-            background-size: 200% 200%;
-            animation: gradientBG 10s ease infinite;
-            padding: 20px;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Glassmorphism Card */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            color: #fff;
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: #fff;
-        }
-
-        /* Styling option agar teks terbaca saat dropdown dibuka */
-        option {
-            background-color: #2a5298;
-            color: white;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: #fff;
-            color: #1e3c72;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .result-container {
-            margin-top: 30px;
-            text-align: center;
-            display: none;
-        }
-
-        .result-title {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-bottom: 5px;
-        }
-
-        .result-price {
-            font-size: 2.2rem;
-            font-weight: 600;
-            color: #fff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(45deg, #0f2027, #203a43, #2c5364); background-size: 200% 200%; animation: gradientBG 10s ease infinite; padding: 20px; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .glass-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 40px; width: 100%; max-width: 500px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); color: #fff; }
+        h2 { text-align: center; margin-bottom: 25px; font-weight: 600; letter-spacing: 1px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); }
+        input, select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.2); color: #fff; font-size: 1rem; outline: none; transition: all 0.3s ease; }
+        input:focus, select:focus { background: rgba(0, 0, 0, 0.4); border-color: #6dd5ed; }
+        option { background-color: #203a43; color: white; }
+        button { width: 100%; padding: 15px; border: none; border-radius: 10px; background: linear-gradient(to right, #4ca1af, #c4e0e5); color: #0f2027; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 10px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(76, 161, 175, 0.4); }
+        .result-container { margin-top: 30px; text-align: center; display: none; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .result-title { font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px; }
+        .result-price { font-size: 2.2rem; font-weight: 600; color: #6dd5ed; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .data-debug { font-size: 0.75rem; color: #aaa; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="glass-card" id="appCard">
-        <h2>Estimasi Harga Mobil</h2>
+        <h2>Dealer Pricing Engine</h2>
         
         <div class="input-group">
-            <label for="hargaBaru">Harga Beli Baru (Rp)</label>
-            <input type="number" id="hargaBaru" placeholder="Contoh: 250000000" required>
-        </div>
-
-        <div class="input-group">
-            <label for="tahunMobil">Tahun Pembuatan Mobil</label>
-            <input type="number" id="tahunMobil" placeholder="Contoh: 2018" required>
-        </div>
-
-        <div class="input-group">
-            <label for="kondisi">Kondisi Kendaraan</label>
-            <select id="kondisi">
-                <option value="0">Sangat Baik (Terawat, No PR)</option>
-                <option value="0.05">Baik (Lecet pemakaian wajar)</option>
-                <option value="0.15">Cukup (Ada PR ringan di bodi/kaki-kaki)</option>
-                <option value="0.25">Buruk (Perlu turun mesin / perbaikan besar)</option>
+            <label for="merekMobil">Merek Mobil</label>
+            <select id="merekMobil">
+                <option value="toyota">Toyota / Lexus</option>
+                <option value="honda">Honda</option>
+                <option value="daihatsu">Daihatsu</option>
+                <option value="mitsubishi">Mitsubishi</option>
+                <option value="suzuki">Suzuki</option>
+                <option value="mazda">Mazda</option>
+                <option value="hyundai">Hyundai / KIA</option>
+                <option value="wuling">Wuling / Merek China Lainnya</option>
+                <option value="bmw">BMW / Mercedes / Eropa</option>
+                <option value="lainnya">Lainnya (Default)</option>
             </select>
         </div>
 
         <div class="input-group">
-            <label for="kilometer">Jarak Tempuh (Kilometer)</label>
-            <input type="number" id="kilometer" placeholder="Contoh: 85000" required>
+            <label for="hargaBaru">Harga Beli Baru (MSRP OTR) - Rp</label>
+            <input type="number" id="hargaBaru" placeholder="Contoh: 300000000" required>
         </div>
 
-        <button onclick="hitungEstimasi()">Hitung Harga</button>
+        <div class="input-group">
+            <label for="tahunMobil">Tahun Pembuatan Mobil</label>
+            <input type="number" id="tahunMobil" placeholder="Contoh: 2021" required>
+        </div>
+
+        <div class="input-group">
+            <label for="kondisi">Kondisi Aktual Hasil Inspeksi</label>
+            <select id="kondisi">
+                <option value="0">Grade A: Sempurna (Full Record, No PR)</option>
+                <option value="0.03">Grade B: Baik (Pemakaian Wajar)</option>
+                <option value="0.08">Grade C: Cukup (Perlu Re-kondisi Bodi/Kaki)</option>
+                <option value="0.15">Grade D: Kurang (Perbaikan Mesin/Major)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="kilometer">Odometer (Jarak Tempuh Km)</label>
+            <input type="number" id="kilometer" placeholder="Contoh: 45000" required>
+        </div>
+
+        <button onclick="hitungEstimasi()">Kalkulasi Harga Pasar</button>
 
         <div class="result-container" id="resultContainer">
-            <div class="result-title">Estimasi Harga Jual/Beli Saat Ini:</div>
+            <div class="result-title">Estimasi Harga Pembelian (Dealer Buy):</div>
             <div class="result-price" id="hasilHarga">Rp 0</div>
+            <div class="data-debug" id="debugInfo"></div>
         </div>
     </div>
 
     <script>
-        // Animasi masuk awal menggunakan GSAP
-        gsap.from("#appCard", { duration: 1, y: 50, opacity: 0, ease: "power3.out" });
+        gsap.from("#appCard", { duration: 1, y: 30, opacity: 0, ease: "power3.out" });
+
+        // Database Algoritma Depresiasi Merek (Dealership Matrix)
+        // Rate Y1 = Depresiasi Tahun Pertama | Rate Y+ = Depresiasi Tahun Kedua dst.
+        const brandMatrix = {
+            "toyota": { y1: 0.10, yNext: 0.05 },    // Depresiasi sangat rendah
+            "honda": { y1: 0.10, yNext: 0.05 },     
+            "daihatsu": { y1: 0.11, yNext: 0.06 },
+            "mitsubishi": { y1: 0.12, yNext: 0.07 },
+            "suzuki": { y1: 0.12, yNext: 0.07 },
+            "mazda": { y1: 0.14, yNext: 0.08 },     // Pasar menengah
+            "hyundai": { y1: 0.15, yNext: 0.09 },
+            "wuling": { y1: 0.18, yNext: 0.11 },    // Depresiasi cukup tajam
+            "bmw": { y1: 0.20, yNext: 0.12 },       // Mobil Eropa depresiasi tinggi
+            "lainnya": { y1: 0.15, yNext: 0.08 }
+        };
 
         function hitungEstimasi() {
-            // 1. Ambil nilai input
+            const merek = document.getElementById('merekMobil').value;
             const hargaBaru = parseFloat(document.getElementById('hargaBaru').value);
             const tahunMobil = parseInt(document.getElementById('tahunMobil').value);
             const faktorKondisi = parseFloat(document.getElementById('kondisi').value);
             const kilometer = parseInt(document.getElementById('kilometer').value);
 
-            // Validasi Input
             if(isNaN(hargaBaru) || isNaN(tahunMobil) || isNaN(kilometer)) {
-                alert("Harap isi semua kolom dengan angka yang valid!");
+                alert("Validasi gagal: Harap isi semua angka dengan benar.");
                 return;
             }
 
-            // Variabel dasar
             const tahunSekarang = new Date().getFullYear();
             let usiaMobil = tahunSekarang - tahunMobil;
-            if(usiaMobil < 0) usiaMobil = 0; // Mencegah input tahun dari masa depan
+            if(usiaMobil < 0) usiaMobil = 0; 
 
             let hargaEstimasi = hargaBaru;
+            
+            // Mengambil rate depresiasi sesuai merek dari matriks
+            const rate = brandMatrix[merek];
 
-            // 2. Hitung Depresiasi Usia
+            // 1. Kalkulasi Kurva Depresiasi Waktu
             if (usiaMobil >= 1) {
-                // Potong 20% di tahun pertama
-                hargaEstimasi = hargaEstimasi - (hargaEstimasi * 0.20);
-                
-                // Potong 10% setiap tahun berikutnya
+                hargaEstimasi = hargaEstimasi - (hargaEstimasi * rate.y1);
                 for (let i = 2; i <= usiaMobil; i++) {
-                    hargaEstimasi = hargaEstimasi - (hargaEstimasi * 0.10);
+                    hargaEstimasi = hargaEstimasi - (hargaEstimasi * rate.yNext);
                 }
             }
 
-            // 3. Hitung Potongan Kondisi
+            // 2. Kalkulasi Potongan Kondisi Inspeksi
             hargaEstimasi = hargaEstimasi - (hargaEstimasi * faktorKondisi);
 
-            // 4. Hitung Penalti Kilometer (Asumsi wajar 15.000 km per tahun)
+            // 3. Kalkulasi Algoritma Odometer (Batas 15.000 Km / tahun)
             const batasKmNormal = usiaMobil === 0 ? 15000 : usiaMobil * 15000;
             if (kilometer > batasKmNormal) {
                 const kmBerlebih = kilometer - batasKmNormal;
-                // Potong 2% untuk setiap 10.000 km yang berlebih
-                const faktorPenaltiKm = Math.floor(kmBerlebih / 10000) * 0.02;
+                // Penalti 1% setiap kelebihan 10.000 Km dari batas wajar
+                const faktorPenaltiKm = Math.floor(kmBerlebih / 10000) * 0.01;
                 hargaEstimasi = hargaEstimasi - (hargaEstimasi * faktorPenaltiKm);
             }
 
-            // Pastikan harga tidak minus
+            // Fallback agar harga tidak minus
             if(hargaEstimasi < 0) hargaEstimasi = 0;
 
-            // 5. Tampilkan Hasil
+            // Render Output
             const resultContainer = document.getElementById('resultContainer');
             const hasilHarga = document.getElementById('hasilHarga');
+            const debugInfo = document.getElementById('debugInfo');
             
             resultContainer.style.display = 'block';
             
-            // Format Rupiah
-            const formatRupiah = new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
+            hasilHarga.innerHTML = new Intl.NumberFormat('id-ID', {
+                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
             }).format(hargaEstimasi);
 
-            hasilHarga.innerHTML = formatRupiah;
+            // Tampilkan info matriks ke user agar transparan
+            debugInfo.innerHTML = `Info Sistem: Depresiasi Y1 (-${rate.y1*100}%), Y+ (-${rate.yNext*100}%/thn) | Usia: ${usiaMobil} Thn`;
 
-            // Animasi GSAP untuk harga
             gsap.fromTo("#resultContainer", 
-                { scale: 0.8, opacity: 0 }, 
-                { duration: 0.5, scale: 1, opacity: 1, ease: "back.out(1.7)" }
+                { y: 20, opacity: 0 }, 
+                { duration: 0.6, y: 0, opacity: 1, ease: "power2.out" }
             );
         }
     </script>
 </body>
-  </html>
+</html>
